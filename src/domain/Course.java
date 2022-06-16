@@ -70,7 +70,10 @@ public class Course {
 	}
 
 	public boolean equals(Object obj) {
-		Course other = (Course)obj;
-		return id.equals(other.id);
+		if(obj instanceof Course) {
+			Course other = (Course) obj;
+			return id.equals(other.id);
+		}
+		return false;
 	}
 }
