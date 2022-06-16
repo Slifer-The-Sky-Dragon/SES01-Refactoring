@@ -26,29 +26,30 @@ public class EnrollCtrlTest {
 
 	@Before
 	public void setup() {
-		math1 = new Course("4", "MATH1", 3, 1);
-		phys1 = new Course("8", "PHYS1", 3, 1);
-		prog = new Course("7", "PROG", 4, 1);
-		math2 = new Course("6", "MATH2", 3, 2).withPre(math1);
-		phys2 = new Course("9", "PHYS2", 3, 2).withPre(math1, phys1);
-		ap = new Course("2", "AP", 3, 1).withPre(prog);
-		dm = new Course("3", "DM", 3, 1).withPre(prog);
-		economy = new Course("1", "ECO", 3, 1);
-		maaref = new Course("5", "MAAREF", 2, 1);
-		farsi = new Course("12", "FA", 2, 1);
-		english = new Course("10", "EN", 2, 1);
-		akhlagh = new Course("11", "AKHLAGH", 2, 1);
-		karafarini = new Course("13", "KAR", 3, 1);
+		math1 = new Course("4", "MATH1", 3, 1, null);
+		phys1 = new Course("8", "PHYS1", 3, 1, null);
+		prog = new Course("7", "PROG", 4, 1, null);
+		math2 = new Course("6", "MATH2", 3, 2, null).withPre(math1);
+		phys2 = new Course("9", "PHYS2", 3, 2, null).withPre(math1, phys1);
+		ap = new Course("2", "AP", 3, 1, null).withPre(prog);
+		dm = new Course("3", "DM", 3, 1, null).withPre(prog);
+		economy = new Course("1", "ECO", 3, 1, null);
+		maaref = new Course("5", "MAAREF", 2, 1, null);
+		farsi = new Course("12", "FA", 2, 1, null);
+		english = new Course("10", "EN", 2, 1, null);
+		akhlagh = new Course("11", "AKHLAGH", 2, 1, null);
+		karafarini = new Course("13", "KAR", 3, 1, null);
 
 		bebe = new Student("1", "Bebe");
 	}
 
-	private ArrayList<CSE> requestedOfferings(Course...courses) {
+	private ArrayList<Course> requestedOfferings(Course...courses) {
 		Calendar cal = Calendar.getInstance();
-		ArrayList<CSE> result = new ArrayList<>();
+		ArrayList<Course> result = new ArrayList<>();
 		for (Course course : courses) {
 			cal.add(Calendar.DATE, 1);
-			result.add(new CSE(course, cal.getTime()));
+			course.setExamDate(cal.getTime());
+			result.add(course);
 		}
 		return result;
 	}
@@ -130,12 +131,11 @@ public class EnrollCtrlTest {
 	@Test(expected = EnrollmentRulesViolationException.class)
 	public void cannotTakeOfferingsWithSameExamTime() throws EnrollmentRulesViolationException {
 		Calendar cal = Calendar.getInstance();
-		new EnrollCtrl().enroll(bebe,
-				List.of(
-					new CSE(phys1, cal.getTime()),
-					new CSE(math1, cal.getTime()),
-					new CSE(phys1, cal.getTime())
-				));
+		phys1.setExamDate(cal.getTime());
+		math1.setExamDate(cal.getTime());
+		math2.setExamDate(cal.getTime());
+
+		new EnrollCtrl().enroll(bebe, List.of(phys1, math1, math2));
 	}
 
 	@Test(expected = EnrollmentRulesViolationException.class)

@@ -9,15 +9,19 @@ public class Course {
 	private String name;
 	private int units;
 	private int section;
+	private Date examDate;
 	private List<Course> prerequisites;
 
-	public Course(String id, String name, int units, int section) {
+	public Course(String id, String name, int units, int section, Date examDate) {
 		this.id = id;
 		this.name = name;
 		this.units = units;
 		this.section = section;
+		this.examDate = examDate;
 		this.prerequisites = new ArrayList<Course>();
 	}
+
+
 	
 	public void addPre(Course c) {
 		getPrerequisites().add(c);
@@ -58,6 +62,12 @@ public class Course {
 	}
 
 	public int getSection() { return section; }
+
+	public Date getExamDate() { return examDate; }
+
+	public void setExamDate(Date examDate) {
+		this.examDate = examDate;
+	}
 
 	public boolean equals(Object obj) {
 		Course other = (Course)obj;
