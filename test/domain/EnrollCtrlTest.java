@@ -26,19 +26,19 @@ public class EnrollCtrlTest {
 
 	@Before
 	public void setup() {
-		math1 = new Course("4", "MATH1", 3);
-		phys1 = new Course("8", "PHYS1", 3);
-		prog = new Course("7", "PROG", 4);
-		math2 = new Course("6", "MATH2", 3).withPre(math1);
-		phys2 = new Course("9", "PHYS2", 3).withPre(math1, phys1);
-		ap = new Course("2", "AP", 3).withPre(prog);
-		dm = new Course("3", "DM", 3).withPre(prog);
-		economy = new Course("1", "ECO", 3);
-		maaref = new Course("5", "MAAREF", 2);
-		farsi = new Course("12", "FA", 2);
-		english = new Course("10", "EN", 2);
-		akhlagh = new Course("11", "AKHLAGH", 2);
-		karafarini = new Course("13", "KAR", 3);
+		math1 = new Course("4", "MATH1", 3, 1);
+		phys1 = new Course("8", "PHYS1", 3, 1);
+		prog = new Course("7", "PROG", 4, 1);
+		math2 = new Course("6", "MATH2", 3, 2).withPre(math1);
+		phys2 = new Course("9", "PHYS2", 3, 2).withPre(math1, phys1);
+		ap = new Course("2", "AP", 3, 1).withPre(prog);
+		dm = new Course("3", "DM", 3, 1).withPre(prog);
+		economy = new Course("1", "ECO", 3, 1);
+		maaref = new Course("5", "MAAREF", 2, 1);
+		farsi = new Course("12", "FA", 2, 1);
+		english = new Course("10", "EN", 2, 1);
+		akhlagh = new Course("11", "AKHLAGH", 2, 1);
+		karafarini = new Course("13", "KAR", 3, 1);
 
 		bebe = new Student("1", "Bebe");
 	}
@@ -54,9 +54,7 @@ public class EnrollCtrlTest {
 	}
 
 	private boolean hasTaken(Student s, Course...courses) {
-	    Set<Course> coursesTaken = new HashSet<>();
-		for (Student.CourseSection cs : s.getCurrentTerm())
-				coursesTaken.add(cs.course);
+		Set<Course> coursesTaken = new HashSet<>(s.getCurrentTerm());
 		for (Course course : courses) {
 			if (!coursesTaken.contains(course))
 				return false;

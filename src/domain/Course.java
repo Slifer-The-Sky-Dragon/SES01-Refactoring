@@ -1,20 +1,22 @@
 package domain;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Course {
 	private String id;
 	private String name;
 	private int units;
-	
-	List<Course> prerequisites;
+	private int section;
+	private List<Course> prerequisites;
 
-	public Course(String id, String name, int units) {
+	public Course(String id, String name, int units, int section) {
 		this.id = id;
 		this.name = name;
 		this.units = units;
-		prerequisites = new ArrayList<Course>();
+		this.section = section;
+		this.prerequisites = new ArrayList<Course>();
 	}
 	
 	public void addPre(Course c) {
@@ -33,6 +35,7 @@ public class Course {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name);
+		sb.append("- " + section);
 		sb.append(" {");
 		for (Course pre : getPrerequisites()) {
 			sb.append(pre.getName());
@@ -53,6 +56,8 @@ public class Course {
 	public String getId() {
 		return id;
 	}
+
+	public int getSection() { return section; }
 
 	public boolean equals(Object obj) {
 		Course other = (Course)obj;
