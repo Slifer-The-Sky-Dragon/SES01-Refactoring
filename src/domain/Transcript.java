@@ -42,11 +42,12 @@ public class Transcript {
         return false;
     }
 
-    public Course findNotPassedPrerequisites(List<Course> prerequisites) {
+    public List<Course> findNotPassedPrerequisites(List<Course> prerequisites) {
+        List<Course> notPassedPrerequisites = new ArrayList<>();
         for(Course prerequisite: prerequisites)
             if(!this.containsPassedCourse(prerequisite))
-                return prerequisite;
-        return null;
+                notPassedPrerequisites.add(prerequisite);
+        return notPassedPrerequisites;
     }
 
     public double getGpa() {
