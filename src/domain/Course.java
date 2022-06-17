@@ -69,6 +69,14 @@ public class Course {
 		this.examDate = examDate;
 	}
 
+	public Boolean hasSameExamDateWith(Course other) {
+		return other.hasSameExamDateWith(this.examDate);
+	}
+
+	public Boolean hasSameExamDateWith(Date otherExamDate) {
+		return this.examDate.equals(otherExamDate);
+	}
+
 	public boolean equals(Object obj) {
 		if(obj instanceof Course) {
 			Course other = (Course) obj;
