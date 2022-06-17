@@ -7,25 +7,16 @@ import domain.exceptions.EnrollmentRulesViolationException;
 
 public class EnrollCtrl {
 	public void enroll(Student s, List<Course> courses) throws EnrollmentRulesViolationException {
-        Map<Term, Map<Course, Double>> transcript = s.getTranscript();
+        Transcript transcript = s.getTranscript();
 		for (Course o : courses) {
-            for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
-                for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                    if (r.getKey().equals(o) && r.getValue() >= 10)
-                        throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getName()));
-                }
-            }
+            if(transcript.containsPassedCourse(o))
+                throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getName()));
+
 			List<Course> prereqs = o.getPrerequisites();
-			nextPre:
-			for (Course pre : prereqs) {
-                for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
-                    for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                        if (r.getKey().equals(pre) && r.getValue() >= 10)
-                            continue nextPre;
-                    }
-				}
-				throw new EnrollmentRulesViolationException(String.format("The student has not passed %s as a prerequisite of %s", pre.getName(), o.getName()));
-			}
+            Course notPassedPrerequisite = transcript.findNotPassedPrerequisites(prereqs);
+            if(notPassedPrerequisite != null)
+                throw new EnrollmentRulesViolationException(String.format("The student has not passed %s as a prerequisite of %s", notPassedPrerequisite.getName(), o.getName()));
+
             for (Course o2 : courses) {
                 if (o == o2)
                     continue;
@@ -38,15 +29,7 @@ public class EnrollCtrl {
 		int unitsRequested = 0;
 		for (Course o : courses)
 			unitsRequested += o.getUnits();
-		double points = 0;
-		int totalUnits = 0;
-        for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
-            for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                points += r.getValue() * r.getKey().getUnits();
-                totalUnits += r.getKey().getUnits();
-            }
-		}
-		double gpa = points / totalUnits;
+        double gpa = transcript.getGpa();
 		if ((gpa < 12 && unitsRequested > 14) ||
 				(gpa < 16 && unitsRequested > 16) ||
 				(unitsRequested > 20))

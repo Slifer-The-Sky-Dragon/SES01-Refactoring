@@ -30,6 +30,11 @@ public class Term {
 	public Date getStartDate() {
 		return startDate;
 	}
-	
-	
+
+	public boolean equals(Object obj) {
+		if(obj instanceof Term other) {
+			return name.equals(other.name);
+		}
+		return false;
+	}
 }
